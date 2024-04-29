@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 class AVL {
     static class node {
         int data, height;
@@ -5,12 +7,14 @@ class AVL {
 
         node(int d) {
             data = d;
+            height = 1;
             left = null;
             right = null;
         }
     }
 
     node root;
+    ArrayList<node> arr = new ArrayList<>();
 
     AVL() {
         root = null;
@@ -18,10 +22,27 @@ class AVL {
 
     void insert(int data) {
         root = insert_node(root, data);
+        arr.clear();
+        arr.add(root);
+    }
+
+    public node insert_node(node root, int data) {
+        if (root == null) 
+           return new node(data);
+        else if (data < root.data) 
+            root.left = insert_node(root.left, data);
+        else if (data > root.data)
+            root.right = insert_node(root.right, data);
+        else
+            return root;
+        root.height = 1 + max(height(root.left), height(root.right));
+        return balance_tree(root);
     }
 
     void delete(int data) {
         root = delete_node(root, data);
+        arr.clear();
+        arr.add(root);
     }
 
     node right_rotate(node root) {
@@ -34,6 +55,7 @@ class AVL {
         tmp1.height = 1 + max(height(tmp1.left), height(tmp1.right));
         return tmp1;
     }
+
     node left_rotate(node root) {
         node tmp1 = root.right;
         node tmp2 = tmp1.left;
@@ -78,18 +100,6 @@ class AVL {
             }
         }
         return root;
-    }
-    public node insert_node(node root, int data) {
-        if (root == null)
-            return new node(data);
-        else if (data < root.data) 
-            root.left = insert_node(root.left, data);
-        else if (data > root.data)
-            root.right = insert_node(root.right, data);
-        else
-            return root;
-        root.height = 1 + max(height(root.left), height(root.right));
-        return balance_tree(root);
     }
 
     public node delete_node(node root, int data) {
@@ -148,16 +158,33 @@ class AVL {
         System.out.print(root.data+".");
         inOrder_node(root.right);
     }
+    
+    public void BFS() {
+        traverse(root);
+    }
+    
+    public void traverse(node root) {
+        if (root == null) 
+            return;
+        System.out.print(root.data+"->");
+        arr.remove(0);
+        if (root.left != null)
+            arr.add(root.left);
+        if (root.right != null)
+            arr.add(root.right);
+        if (arr.size() != 0)
+            traverse(arr.get(0));
+    }
 
     public static void main(String args[]) {
         AVL b = new AVL();
-        b.insert(7);    
-        b.insert(2);    
-        b.insert(3);    
+        b.insert(7); 
+        b.insert(2); 
+        b.insert(3);
         b.insert(5);
-        b.delete(7);
+        b.insert(4);
         System.out.println(b.search(2));
-        b.inOrder();
+        b.BFS();
     }
 }
 
