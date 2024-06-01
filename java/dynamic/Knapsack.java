@@ -48,7 +48,9 @@ class Knapsack {
         int[] price = {1, 2, 5, 6};
         int max = 8;
         int ans[] = k.solve(price, weight, max);
-        for (int i = 0; i < ans.length; i++)
-        System.out.println(ans[i]);
+        for (int i = 0; i < ans.length; i++) {
+            if (ans[i] == 1)
+                System.out.println(weight[i]);
+        }
     }
 }
